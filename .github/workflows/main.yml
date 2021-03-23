@@ -48,7 +48,7 @@ jobs:
       
       - name: GitHub Environment Variables Action
         uses: FranzDiebold/github-env-vars-action@v2.1.0
-      - run: echo  ${ CI_HEAD_REF_SLUG}
+      - run: echo  ${CI_HEAD_REF_SLUG}
    
     #  - uses: aws-actions/configure-aws-credentials@v1
    #     with:
