@@ -41,11 +41,8 @@ jobs:
       - run: npm i
       - run: npm run-script build --production
       - run: echo running on branch ${GITHUB_REF##*/}
-      - name: Extract branch name
-        shell: bash
-        run: echo "##[set-output name=branch;]${GITHUB_REF#refs/heads/}"
-        id: extract_branch
-      - run: echo github.event.number ${{github.event.number}}
+      - run: echo  ${GITHUB_REF#refs/heads/}
+      - run: echo  ${github.event.number}
 #      - uses: aws-actions/configure-aws-credentials@v1
  #       with:
 #          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
