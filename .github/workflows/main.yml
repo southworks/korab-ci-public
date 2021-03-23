@@ -5,10 +5,10 @@ name: Deploy
 # Controls when the action will run. 
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
-#  push:
-  # branches: [ main ]
-#    paths-ignore:
-#    - 'process/**'
+  push:
+   branches: [ main ]
+   paths-ignore:
+    - 'process/**'
 
   pull_request:
     types: [opened, synchronize, reopened]
@@ -40,20 +40,13 @@ jobs:
 #        For now... Until we start using npm instead of yarn
       - run: npm i
       - run: npm run-script build --production
-      - run: echo running on branch ${GITHUB_REF##*/}
-      - run: echo  ${GITHUB_REF#refs/heads/}
-      - run: echo  ${GITHUB_HEAD_REF}
-      - run: echo  ${GITHUB_HEAD_REF#}
-      - run: echo  ${{github.event.number}}
-      
       - name: GitHub Environment Variables Action
         uses: FranzDiebold/github-env-vars-action@v2.1.0
-      - run: echo  ${CI_HEAD_REF_SLUG}
-   
-    #  - uses: aws-actions/configure-aws-credentials@v1
-   #     with:
-  #        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
- #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws-region: ${{ secrets.AWS_REGION }}
-#      - run: aws s3 sync ./build s3://${secrets.S3_BUCKET}/${GITHUB_REF##*/}
-#      - run: aws s3 cp s3://${secrets.S3_BUCKET}/${CI_HEAD_REF_SLUG}/index.html  s3://${secrets.S3_BUCKET}/${GITHUB_REF##*/}/index.html --region us-east-1 --metadata-directive REPLACE --cache-control max-age=0 --content-type "text/html"
+      - run: echo CI_HEAD_REF_SLUG ${CI_HEAD_REF_SLUG}
+      - uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - run: aws s3 sync ./build s3://${secrets.S3_BUCKET}/${GITHUB_REF##*/}
+      - run: aws s3 cp s3://${secrets.S3_BUCKET}/${CI_HEAD_REF_SLUG}/index.html  s3://${secrets.S3_BUCKET}/${CI_HEAD_REF_SLUG}/index.html --region ${secrets.AWS_REGION} --metadata-directive REPLACE --cache-control max-age=0 --content-type "text/html"
