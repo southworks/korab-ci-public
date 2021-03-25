@@ -5,11 +5,12 @@ import { About } from './About';
 import { NavBar } from './NavBar';
 import { NoMatch } from './NoMatch';
 
+
 function App() {
   return (
-    <BrowserRouter >
+    <BrowserRouter basename={process.env.PUBLIC_URL}>
       <NavBar />
-      <Switch>
+      <Switch >
         <Route exact path="/">
           <Home />
         </Route>
