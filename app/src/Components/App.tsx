@@ -8,7 +8,7 @@ import { NoMatch } from './NoMatch';
 
 function App() {
   return (
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
+    <BrowserRouter basename={'test-another-branch'}>
       <NavBar />
       <Switch >
         <Route exact path="/">
