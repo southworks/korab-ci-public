@@ -8,7 +8,7 @@ interface IBubble {
   color: String
 }
 
-function Bubbles() {
+function BubbleCanvas() {
   const [bubbles, setBubbles] = useState<IBubble[]>([]);
   const [color, setColor] = useState<String>('red');
 
@@ -49,11 +49,11 @@ function Bubbles() {
 
   return (
     <>
-      {bubbles.length === 20 &&
+      {/* {bubbles.length === 20 &&
         <div className='winner'>
           <h1>{winner()}</h1>
           <button onClick={() => setBubbles([])}>Restart</button>
-        </div>}
+        </div>} */}
       <div className='pickColor'>
         Pick a color
         <button value='red' onClick={changeColor}>
@@ -94,4 +94,4 @@ function Bubbles() {
   );
 }
 
-export default Bubbles;
+export default BubbleCanvas;
