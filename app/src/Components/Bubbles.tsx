@@ -13,13 +13,11 @@ function Bubbles() {
   const [color, setColor] = useState<String>('red');
 
   const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    console.log(`e div`, e)
     if (e.target !== e.currentTarget) return
     setBubbles((bubbles) => [...bubbles, { x: e.screenX, y: e.screenY, color },]);
   };
 
   const handleBubbleDrag = (e: React.MouseEvent<HTMLDivElement>, i: number) => {
-    console.log(`e`, e)
     setBubbles((newBubbles: IBubble[]) => {
       const x = [...newBubbles];
       x.splice(i, 1);
@@ -32,14 +30,12 @@ function Bubbles() {
   };
 
   const clickChangeColor = (i: number) => {
-    console.log(`e color`)
     setBubbles((newBubbles: IBubble[]) => {
       const x = [...newBubbles];
       x[i].color = color
       return [...x];
     });
   }
-  // console.log(`bubbles`, bubbles);
   const winner = () => {
     const isRed = bubbles.filter(x => x.color === 'red')
     if (isRed.length > 10) return 'Player RED wins!!'
