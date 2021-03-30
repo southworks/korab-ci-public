@@ -2,7 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 
 export const NavBar = () => <div>
-    <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'row', gap: '20px' }}>
+    <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'row', gap: '20px', zIndex: 88888, position: 'relative' }}>
         <li>
             <NavLink to="/">Home</NavLink>
         </li>
