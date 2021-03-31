@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import BubbleComponent from './Bubble';
 import './Bubbles.css';
@@ -10,11 +10,9 @@ import { Color, IRoom } from './types';
 function BubbleCanvas() {
   const { room } = useParams<{ room: string }>()
 
-  const { bubbles, addBubble, captureBubble, moveBubble, reset } = useBubbles(room);
+  const { bubbles, users, addBubble, captureBubble, moveBubble, reset } = useBubbles(room);
 
   const [newGame, setNewGame] = useState('');
-  // const [bubbles, setBubbles] = useState<Record<string, Bubble>>({});
-  const [color, setColor] = useState<Color>(0);
   const [bubbleLimit] = useState<number>(30);
   const [finished, setFinished] = useState(false);
   const [roomData, setRoomData] = useState<IRoom | null>(null);
@@ -27,44 +25,34 @@ function BubbleCanvas() {
     })
   }, [room]);
 
-  useEffect(() => {
-    // Get rooms data
-    if (roomData && !color) {
-      let userColor = roomData?.usersCount % 2 ? Color.RED : Color.BLUE;
-      setColor(userColor)
-    }
-  }, [color, roomData]);
+  // useEffect(() => {
 
-  useEffect(() => {
-    if (newGame === 'count' && Object.keys(bubbles).length === bubbleLimit) setFinished(true)
-    if (newGame === 'timer') {
-      setTimeout(() => {
-        setFinished(true)
-      }, 60000);
-    }
-    if (!newGame && Object.keys(bubbles).length) {
-      reset();
-      setFinished(false)
-    }
-
-  }, [newGame, bubbleLimit, bubbles, reset]);
+  //   if (newGame === 'count' && Object.keys(bubbles).length === bubbleLimit) setFinished(true)
+  //   if (newGame === 'timer') {
+  //     setTimeout(() => {
+  //       setFinished(true)
+  //     }, 60000);
+  //   }
+  //   if (!newGame && Object.keys(bubbles).length) {
+  //     reset();
+  //     setFinished(false)
+  //   }
+  //   //TODO:
+  //   // Clear timeout, if set
+  // }, [newGame, bubbleLimit, bubbles, reset]);
 
   const handleGameType = (e: React.MouseEvent<HTMLButtonElement>) => {
     setNewGame(e.currentTarget.value)
   }
 
-  const handleDivClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  const handleCreateBubble = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target !== e.currentTarget) return;
-    addBubble(e.screenX, e.screenY, color);
+    addBubble(e.screenX, e.screenY);
   };
 
-  const handleBubbleDrag = (e: React.MouseEvent<HTMLDivElement>, id: string) => {
+  const handleBubbleDrag = useCallback((e: React.MouseEvent<HTMLDivElement>, id: string) => {
     moveBubble(id, e.screenX, e.screenY);
-  };
-
-  // const changeColor = (e: React.MouseEvent<HTMLButtonElement>) => {
-  //   setColor(e.currentTarget.value);
-  // };
+  }, [moveBubble]);
 
   const winner = () => {
     const isRed = Object.values(bubbles).filter(x => x.color === Color.RED)
@@ -75,7 +63,7 @@ function BubbleCanvas() {
 
   return (
     <>
-      {
+      {/* {
         newGame === '' &&
         <div className='modal'>
           <h2>Pick a game style</h2>
@@ -84,7 +72,7 @@ function BubbleCanvas() {
             <button value='count' onClick={handleGameType}>Counter 30</button>
           </div>
         </div>
-      }
+      } */}
       {
         finished &&
         <div className='modal'>
@@ -95,15 +83,16 @@ function BubbleCanvas() {
           </div>
         </div>
       }
-      <Scoreboard bubbles={bubbles} />
-      <div className='bubbleCanvas' onClick={handleDivClick}>
+      <Scoreboard bubbles={bubbles} users={users} />
+      <div className='bubbleCanvas' onClick={handleCreateBubble}>
         {Object.entries(bubbles).map(([key, bubble], i) => {
           return (
             <BubbleComponent key={key}
-              handleBubbleDrag={handleBubbleDrag}
-              clickChangeColor={() => captureBubble(key, color)}
               id={key}
-              bubble={bubble} />
+              bubble={bubble}
+              handleBubbleDrag={handleBubbleDrag}
+              onBubbleClick={captureBubble}
+            />
           );
         })}
       </div>

@@ -1,6 +1,6 @@
 export enum Color {
-    RED = 0,
-    BLUE = 1
+    RED = 'red',
+    BLUE = 'blue'
 };
 
 export type Bubble = {

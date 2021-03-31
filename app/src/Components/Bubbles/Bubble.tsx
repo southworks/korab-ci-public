@@ -1,17 +1,18 @@
 import React from 'react'
 import './Bubble.css'
-import { Bubble } from './types'
+import { Bubble, Color } from './types'
 
 interface IBubbleProps {
   id: string,
   bubble: Bubble,
-  clickChangeColor: Function,
+  onBubbleClick: (bubbleId: string) => void,
   handleBubbleDrag: Function
 }
 
 const BubbleComponent = React.memo(
   (props: IBubbleProps) => {
-    const { clickChangeColor, handleBubbleDrag, bubble, id } = props
+    const { onBubbleClick, handleBubbleDrag, bubble, id } = props;
+
     return (
       <div
         className='bubble'
@@ -23,7 +24,7 @@ const BubbleComponent = React.memo(
           // zIndex: id + 1,
           background: `${bubble.color}`,
         }}
-        onClick={() => clickChangeColor(id)}
+        onClick={() => onBubbleClick(id)}
         // onDrag={handleBubbleDrag}
         onDragEnd={(e) => handleBubbleDrag(e, id)}>
       </div>
