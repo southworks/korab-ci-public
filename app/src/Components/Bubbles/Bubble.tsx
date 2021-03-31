@@ -1,21 +1,15 @@
 import React from 'react'
-
 import './Bubble.css'
-
-interface IBubble {
-  x: number,
-  y: number,
-  color: String
-}
+import { Bubble } from './types'
 
 interface IBubbleProps {
   id: string,
-  bubble: IBubble,
+  bubble: Bubble,
   clickChangeColor: Function,
   handleBubbleDrag: Function
 }
 
-const Bubble = React.memo(
+const BubbleComponent = React.memo(
   (props: IBubbleProps) => {
     const { clickChangeColor, handleBubbleDrag, bubble, id } = props
     return (
@@ -37,4 +31,4 @@ const Bubble = React.memo(
   }
 )
 
-export default Bubble
+export default BubbleComponent

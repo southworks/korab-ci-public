@@ -1,20 +1,10 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { database } from '../../Services/firebase';
-
-export enum Color {
-    RED = 0,
-    BLUE = 1
-};
-
-export type Bubble = {
-    x: number;
-    y: number;
-    color: Color
-}
+import { Bubble, BubbleCollection, Color } from './types';
 
 
 export const useBubbles = (roomId: string) => {
-    const [bubbles, setBubbles] = useState({});
+    const [bubbles, setBubbles] = useState<BubbleCollection>({});
 
     if (!roomId || roomId.trim() === '') throw new Error('Invalid room id');
 
@@ -48,13 +38,13 @@ export const useBubbles = (roomId: string) => {
             }
         });
 
-    }, [roomId, database])
+    }, [roomId])
 
     const addBubble = useCallback((x: number, y: number, color: Color) => {
         let newBubbleRef = database.ref('/bubbles/' + roomId).push();
         newBubbleRef.set({ x, y, color })
         return newBubbleRef.key;
-    }, [roomId, database])
+    }, [roomId])
 
     const moveBubble = useCallback((bubbleId: string, x: number, y: number) => {
         try {
@@ -63,7 +53,7 @@ export const useBubbles = (roomId: string) => {
             console.error('Bubble coulf not be captured', bubbleId)
         }
 
-    }, [roomId, database])
+    }, [roomId])
 
     const captureBubble = useCallback((bubbleId: string, color: Color) => {
         try {
@@ -71,13 +61,19 @@ export const useBubbles = (roomId: string) => {
         } catch (err) {
             console.error('Bubble coulf not be captured', bubbleId)
         }
-    }, [roomId, database])
+    }, [roomId])
+
+    const reset = useCallback(() => {
+        setBubbles({});
+        database.ref(`/bubbles/${roomId}`).set({});
+    }, [roomId])
 
     return {
         bubbles,
         addBubble,
         moveBubble,
-        captureBubble
+        captureBubble,
+        reset
     }
 
 }

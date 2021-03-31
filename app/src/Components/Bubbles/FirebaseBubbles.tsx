@@ -1,5 +1,5 @@
-import { useEffect } from "react";
-import { Color, useBubbles } from "./hooks";
+import { useBubbles } from "./hooks";
+import { Color } from "./types";
 
 export const FirebaseBubbles = () => {
     const { bubbles, addBubble, captureBubble } = useBubbles('abc');

@@ -1,19 +1,12 @@
-import { IBubble } from "./types"
+import { BubbleCollection, Color } from "./types"
 
-export const Scoreboard = ({ bubbles }: { bubbles: Record<string, IBubble> }) => {
+export const Scoreboard = ({ bubbles }: { bubbles: BubbleCollection }) => {
+    const redCount = Object.values(bubbles).filter((x) => x.color === Color.RED).length;
+    const blueCount = Object.values(bubbles).filter((x) => x.color === Color.RED).length;
+
     return <div className='Scoreboard'>
-        Scoreboard
-    <p>
-            Red
-      <span className='redBubble'>
-                {Object.values(bubbles).filter((x) => x.color === 'red').length}
-            </span>
-        </p>
-        <p >
-            Blue
-      <span className='blueBubble'>
-                {Object.values(bubbles).filter((x) => x.color === 'blue').length}
-            </span>
-        </p>
+        <h3>Scoreboard</h3>
+        <p>Red <span className='redBubble'>{redCount}</span></p>
+        <p>Blue <span className='blueBubble'>{blueCount}</span></p>
     </div>
 }
