@@ -12,7 +12,6 @@ export type Bubble = {
     color: Color
 }
 
-
 export const useBubbles = (roomId: string) => {
     const databaseRef = useRef(database);
     const [bubbles, setBubbles] = useState({});
