@@ -22,4 +22,3 @@ export const FirebaseBubbles = () => {
         </div>
     </div>
 }
-}
