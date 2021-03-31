@@ -3,22 +3,9 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import Bubble from './Bubble';
 import './Bubbles.css';
+import { Scoreboard } from './Scoreboard';
+import { IBubble, IRoom } from './types';
 
-interface IBubble {
-  x: number,
-  y: number,
-  color: String
-}
-
-// interface IBubbles {
-//   [id: string]: IBubble
-// }
-
-interface IRoom {
-  bubbles: Record<string, IBubble>
-  usersCount: number
-  status: string
-}
 
 function BubbleCanvas() {
   const [newGame, setNewGame] = useState('');
@@ -119,21 +106,7 @@ function BubbleCanvas() {
           </div>
         </div>
       }
-      <div className='Scoreboard'>
-        Scoreboard
-        <p>
-          Red
-          <span className='redBubble'>
-            {Object.values(bubbles).filter((x) => x.color === 'red').length}
-          </span>
-        </p>
-        <p >
-          Blue
-          <span className='blueBubble'>
-            {Object.values(bubbles).filter((x) => x.color === 'blue').length}
-          </span>
-        </p>
-      </div>
+      <Scoreboard bubbles={bubbles} />
       <div className='bubbleCanvas' onClick={handleDivClick}>
         {Object.entries(bubbles).map(([key, bubble], i) => {
           return (
