@@ -1,30 +1,65 @@
-import { useState, useRef, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { database } from '../../Services/firebase';
+import { Bubble, BubbleCollection, Color } from './types';
 
-export enum Color {
-    RED = 0,
-    BLUE = 1
-};
 
-export type Bubble = {
-    x: number;
-    y: number;
-    color: Color
-}
 
+const hydrateBubble = (wireBubble: any) => ({
+    ...wireBubble,
+    color: wireBubble.color === 0 ? Color.BLUE : Color.RED
+})
 
 export const useBubbles = (roomId: string) => {
-    const [bubbles, setBubbles] = useState({});
+    const [bubbles, setBubbles] = useState<BubbleCollection>({});
+    const [users, setUsers] = useState<number>(0);
+    const [color, setColor] = useState<Color>(Color.RED);
 
     if (!roomId || roomId.trim() === '') throw new Error('Invalid room id');
 
     const udpateBubbles = (key: string | null, bubble: Bubble) => {
         if (key) {
             setBubbles((prev) => {
-                return { ...prev, [key]: bubble }
+                return { ...prev, [key]: hydrateBubble(bubble) }
             })
         }
     }
+
+    useEffect(() => console.log(color), [color])
+
+    useEffect(() => {
+        const roomuserCountRef = database.ref(`/rooms/${roomId}`);
+     
+        roomuserCountRef.transaction((room) => {
+            if (!room) {
+                room = {
+                    name: roomId,
+                    usersCount: 0
+                }
+            }
+
+            room.usersCount++;
+            return room;
+        }).then(({snapshot}) => {
+            setColor(snapshot.val().usersCount % 2 === 0 ? Color.BLUE : Color.RED)
+        })
+
+        roomuserCountRef.on('value', (snapshot) => {
+            const data = snapshot.val();
+            if (data) {
+                setUsers(data.usersCount)
+            }
+        })
+
+        return () => {
+            roomuserCountRef.transaction((room) => {
+                if (room) {
+                    room.usersCount--;
+                }
+                return room;
+            })
+        }
+    }, [roomId])
+
 
     //Set up listener for realtime communication with Firebase Realtime Database
     useEffect(() => {
@@ -48,13 +83,20 @@ export const useBubbles = (roomId: string) => {
             }
         });
 
-    }, [roomId, database])
+        database.ref('/bubbles').on('child_removed', (snapshot) => {
+            console.log('removed', snapshot)
+            if (snapshot.key === roomId) setBubbles({});
+        });
+    }, [roomId])
 
-    const addBubble = useCallback((x: number, y: number, color: Color) => {
+    const addBubble = useCallback((x: number, y: number) => {
+        const colorId = color === Color.BLUE ? 0 : 1;
         let newBubbleRef = database.ref('/bubbles/' + roomId).push();
-        newBubbleRef.set({ x, y, color })
+
+        newBubbleRef.set({ x, y, color: colorId })
+
         return newBubbleRef.key;
-    }, [roomId, database])
+    }, [roomId, color])
 
     const moveBubble = useCallback((bubbleId: string, x: number, y: number) => {
         try {
@@ -63,21 +105,28 @@ export const useBubbles = (roomId: string) => {
             console.error('Bubble coulf not be captured', bubbleId)
         }
 
-    }, [roomId, database])
+    }, [roomId])
 
-    const captureBubble = useCallback((bubbleId: string, color: Color) => {
+    const captureBubble = useCallback((bubbleId: string) => {
         try {
-            database.ref(`/bubbles/${roomId}/${bubbleId}`).update({ color })
+            database.ref(`/bubbles/${roomId}/${bubbleId}`).update({ color: color === Color.BLUE ? 0 : 1 })
         } catch (err) {
             console.error('Bubble coulf not be captured', bubbleId)
         }
-    }, [roomId, database])
+    }, [roomId, color])
+
+    const reset = useCallback(() => {
+        setBubbles({});
+        database.ref(`/bubbles/${roomId}`).set({});
+    }, [roomId])
 
     return {
         bubbles,
+        users,
         addBubble,
         moveBubble,
-        captureBubble
+        captureBubble,
+        reset
     }
 
 }

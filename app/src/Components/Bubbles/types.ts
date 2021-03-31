@@ -1,14 +1,17 @@
-export interface IBubble {
-    x: number,
-    y: number,
-    color: String
+export enum Color {
+    RED = 'red',
+    BLUE = 'blue'
+};
+
+export type Bubble = {
+    x: number;
+    y: number;
+    color: Color
 }
 
-// interface IBubbles {
-//   [id: string]: IBubble
-// }
+export type BubbleCollection  = Record<string, Bubble>
+
 export interface IRoom {
-    bubbles: Record<string, IBubble>
     usersCount: number
     status: string
 }
