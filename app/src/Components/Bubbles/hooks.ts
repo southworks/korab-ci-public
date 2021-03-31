@@ -12,8 +12,8 @@ export type Bubble = {
     color: Color
 }
 
+
 export const useBubbles = (roomId: string) => {
-    const databaseRef = useRef(database);
     const [bubbles, setBubbles] = useState({});
 
     if (!roomId || roomId.trim() === '') throw new Error('Invalid room id');
@@ -28,7 +28,7 @@ export const useBubbles = (roomId: string) => {
 
     //Set up listener for realtime communication with Firebase Realtime Database
     useEffect(() => {
-        var bubblesRef = databaseRef.current.ref('/bubbles/' + roomId);
+        var bubblesRef = database.ref('/bubbles/' + roomId);
 
         bubblesRef.on('child_added', (snapshot) => {
             try {
@@ -48,30 +48,30 @@ export const useBubbles = (roomId: string) => {
             }
         });
 
-    }, [roomId])
+    }, [roomId, database])
 
     const addBubble = useCallback((x: number, y: number, color: Color) => {
-        let newBubbleRef = databaseRef.current.ref('/bubbles/' + roomId).push();
+        let newBubbleRef = database.ref('/bubbles/' + roomId).push();
         newBubbleRef.set({ x, y, color })
         return newBubbleRef.key;
-    }, [roomId, databaseRef])
+    }, [roomId, database])
 
     const moveBubble = useCallback((bubbleId: string, x: number, y: number) => {
         try {
-            databaseRef.current.ref(`/bubbles/${roomId}/${bubbleId}`).update({ x, y });
+            database.ref(`/bubbles/${roomId}/${bubbleId}`).update({ x, y });
         } catch (err) {
             console.error('Bubble coulf not be captured', bubbleId)
         }
 
-    }, [roomId, databaseRef])
+    }, [roomId, database])
 
     const captureBubble = useCallback((bubbleId: string, color: Color) => {
         try {
-            databaseRef.current.ref(`/bubbles/${roomId}/${bubbleId}`).update({ color })
+            database.ref(`/bubbles/${roomId}/${bubbleId}`).update({ color })
         } catch (err) {
             console.error('Bubble coulf not be captured', bubbleId)
         }
-    }, [roomId, databaseRef])
+    }, [roomId, database])
 
     return {
         bubbles,
