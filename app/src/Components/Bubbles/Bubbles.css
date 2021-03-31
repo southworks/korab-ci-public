@@ -1,4 +1,4 @@
-.App {
+.bubbleCanvas {
   text-align: center;
   width: 100vw;
   height: 100vh;
@@ -7,28 +7,20 @@
   top: 0;
 }
 
-.bubble {
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  background: red;
-  border-radius: 50px;
-  border: 2px solid black;
-  /* transform-origin: center; */
-  cursor: move;
-}
-button {
+p {
   display: flex;
   justify-content: space-evenly;
-  width: 150px;
+  width: 100%;
+  text-align: center;
+  background: white;
 }
 
 span {
-  width: 20px;
+  min-width: 20px;
+  padding: 0 5px;
   color: white;
 }
-.pickColor {
-  /* float: left; */
+.Scoreboard {
   position: absolute;
   top: 50px;
   left: 100px;
@@ -37,19 +29,19 @@ span {
   flex-direction: column;
   width: 200px;
   z-index: 88888;
+  background: rgba(0, 0, 0, 0.4);
+  /* box-shadow: 0 0 5px black; */
 }
 .redBubble {
   height: 100%;
-  /* width: 100%; */
   background-color: red;
 }
 .blueBubble {
   height: 100%;
-  /* width: 100%; */
   background: blue;
 }
 
-.winner {
+.modal {
   background-color: rgba(0, 0, 0, 0.7);
   z-index: 99999;
   position: absolute;

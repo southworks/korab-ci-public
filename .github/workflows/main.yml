@@ -38,12 +38,12 @@ jobs:
 #        Install from package-lock.json instead of checking package.json versions
 #       - run: npm ci
 #        For now... Until we start using npm instead of yarn
-      - run: npm i
+      - run: npm i --production
+      - run: sed -i "s#PUBLIC_URL_TBD#/$CI_HEAD_REF_SLUG#g" ./package.json
       - run: npm run-script build --production
       - name: GitHub Environment Variables Action
         uses: FranzDiebold/github-env-vars-action@v2.1.0
       - run: echo CI_HEAD_REF_SLUG ${CI_HEAD_REF_SLUG}
-      - run: sed -i 's#static/#${CI_HEAD_REF_SLUG}/static/#' ./build/index.html
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

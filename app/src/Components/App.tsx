@@ -5,6 +5,7 @@ import { About } from './About';
 import { NavBar } from './NavBar';
 import { NoMatch } from './NoMatch';
 import BubbleCanvas from './Bubbles/Bubbles';
+import JoinOrCreateRoom from './Bubbles/JoinOrCreateRoom';
 
 function App() {
   return (
@@ -17,7 +18,10 @@ function App() {
         <Route path="/about">
           <About />
         </Route>
-        <Route path="/bubbles">
+        <Route exact path="/bubbles">
+          <JoinOrCreateRoom />
+        </Route>
+        <Route path="/bubbles/:room">
           <BubbleCanvas />
         </Route>
         <Route path="*">
