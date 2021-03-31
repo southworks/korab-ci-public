@@ -1,0 +1,57 @@
+.bubbleCanvas {
+  text-align: center;
+  width: 100vw;
+  height: 100vh;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+}
+
+p {
+  display: flex;
+  justify-content: space-evenly;
+  width: 100%;
+  text-align: center;
+  background: white;
+}
+
+span {
+  min-width: 20px;
+  padding: 0 5px;
+  color: white;
+}
+.Scoreboard {
+  position: absolute;
+  top: 50px;
+  left: 100px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 200px;
+  z-index: 88888;
+  background: rgba(0, 0, 0, 0.4);
+  /* box-shadow: 0 0 5px black; */
+}
+.redBubble {
+  height: 100%;
+  background-color: red;
+}
+.blueBubble {
+  height: 100%;
+  background: blue;
+}
+
+.modal {
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 99999;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
